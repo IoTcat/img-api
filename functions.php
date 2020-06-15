@@ -284,36 +284,86 @@ function getIp()
 	return $realip;
 }
 
+/* obs sdk */
+require '/home/lib/huaweicloud-sdk-php-obs/vendor/autoload.php';
+require '/home/lib/huaweicloud-sdk-php-obs/obs-autoloader.php';
+
+use Obs\ObsClient;
+
 
 /* obs get video */
 function getVideo($path, $time = 120*60){
 
-    return trim(exec(__DIR__."/obsutil sign obs://yimian-video/". $path ." -e=". $time));
+    return obsSign($path, $time);
 }
 
 
 /* obs get img */
 function getImg($path, $time = 300){
 
-    return str_replace('yimian-image.obs.cn-east-2.myhuaweicloud.com:443','image.yimian.xyz',trim(exec(__DIR__."/obsutil sign obs://yimian-image/". $path ." -e=". $time)));
+    return str_replace('yimian-image.obs.cn-east-2.myhuaweicloud.com:443','image.yimian.xyz',obsSign($path, $time));
 }
 
-function getImgsInfo($type){
-    $arr_os = array();
-    $arr = array();
-    ini_set("pcre.backtrack_limit" , -1); ini_set("pcre.recursion_limit" , -1); ini_set("memory_limit" , "1024M");
-    exec(__DIR__.'/obsutil ls obs://yimian-image/'.$type.' -limit=-1', $arr_os);
-    //exec(__DIR__.'/obsutil', $arr_os);
-    //var_dump($arr_os);
-    //echo count($arr_os);    
 
-    $str = implode ($arr_os);
+
+
+function obsSign($path, $expires = 300){ 
+
+    $obsClient = new ObsClient([
+            'key' => $GLOBALS['huawei_AK'],
+            'secret' => $GLOBALS['huawei_SK'],
+            'endpoint' => "https://obs.cn-east-2.myhuaweicloud.com",
+    ]);
+
+
+    $resp = $obsClient->createSignedUrl( [ 
+        'Method' => 'GET',
+        'Bucket' => 'yimian-image',
+        'Key' => $path,
+        'Expires' => $expires
+    ] );
+
+    $obsClient -> close();
+    return $resp['SignedUrl'];
+
+}
+
+
+
+
+
+function getImgsInfo($type, $isFast = false){ 
+    
+    $obsClient = new ObsClient([
+            'key' => $GLOBALS['huawei_AK'],
+            'secret' => $GLOBALS['huawei_SK'],
+            'endpoint' => "https://obs.cn-east-2.myhuaweicloud.com",
+    ]);
+
+    $resp = $obsClient -> listObjects([
+        'Bucket' => 'yimian-image',
+        'MaxKeys' => 10000,
+        'Prefix' => $type.'/',
+        'Marker' => $type.'/img'
+    ]);
+
+
+    //ini_set("pcre.backtrack_limit" , -1); ini_set("pcre.recursion_limit" , -1); ini_set("memory_limit" , "1024M");
+
+    foreach($resp['Contents'] as $index => $val){
+        $str .= $val['Key'].'  ';
+    };
+
+    $obsClient -> close();
+
+
     preg_match_all('/img_(\S*?)_(\d{2,4})x(\d{2,4})_(\S*?)_(\S*?)_(\S*?).(jpe?g|png|gif|svg)\b/', $str, $arr);
 
+//echo var_dump($str);
+
     return $arr;
+
 }
-
-
 
 /*****gugu*****/
 
