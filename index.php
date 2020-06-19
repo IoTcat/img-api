@@ -18,6 +18,9 @@ $size = $_REQUEST['size'];
 $display = $_REQUEST['display'];
 $R18 = $_REQUEST['R18'];
 $range = $_REQUEST['range'];
+$format = $_REQUEST['format'];
+$compress = $_REQUEST['compress'];
+$command = $_REQUEST['command'];
 
 
 if(!isset($type) || !($type == "moe" || $type == "koino" || $type == "head" || $type == "wallpaper" || $type == "blog" || $type == "imgbed" || $type == "easyver")) $type = "moe";
@@ -27,7 +30,9 @@ if(!isset($path)) $path = null;
 if($display != "true") $display = false; else $display = true;
 if($R18 != "true") $R18 = false; else $R18 = true;
 if(isset($range) && $range > 0) $range = $range; else $range = 0;
-
+if(!isset($format) || !($format == "jpg" || $format == "png" || $format == "webp" || $format == "bmp")) $format = null;
+if(!isset($compress) || !($compress%10 == 0)) $compress = null;
+if(!isset($command)) $command = null;
 
 if($path){
 
