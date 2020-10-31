@@ -9,6 +9,32 @@ include './functions.php';
 }*/
 
 
+$whiteList = array(
+    'www.eee.dog',
+    'api.yimian.xyz',
+    'home.yimian.xyz',
+    'img.yimian.xyz',
+    'acg.watch',
+    'iotcat.me',
+    'ushio.cool',
+    'yimian.xyz',
+    'guide.yimian.xyz',
+    'cp-acc.yimian.xyz',
+    'v2ray.yimian.xyz',
+    'onedrive.yimian.xyz',
+    'login.yimian.xyz',
+    'user.yimian.xyz',
+    'imgbed.yimian.xyz',
+    'share.yimian.xyz',
+    'proxy.yimian.xyz',
+    'shorturl.yimian.xyz',
+    'mksec.yimian.xyz',
+    'monitor.yimian.xyz',
+    'blog.yimian.xyz'
+);
+
+
+
 header('content-type: image/png');
 
 $path = $_REQUEST['path'];
@@ -33,6 +59,47 @@ if(isset($range) && $range > 0) $range = $range; else $range = 0;
 if(!isset($format) || !($format == "jpg" || $format == "png" || $format == "webp" || $format == "bmp")) $format = null;
 if(!isset($compress) || !($compress%10 == 0)) $compress = null;
 if(!isset($command)) $command = null;
+
+
+
+$__from = get_from();
+$__from = parse_url($__from)['host'];
+
+if(!in_array($__from, $whiteList) && $type == "moe"){
+    $redis = new redis(); 
+    $redis->connect('redis',6379);
+
+
+    $__time = 'api/img/_time/'.$__from;
+    $__num = 'api/img/_num/'.$__from;
+
+    if(!$redis->exists($__time) || !$redis->exists($__num)){
+        $redis->set($__time, time());
+        $redis->set($__num, -200);
+    }
+
+    $_time = $redis->get($__time);
+    $_num = $redis->get($__num);
+
+    if(time() - $_time > 60*60*24){
+        $redis->set($__time, time());
+        $redis->set($__num, 0);
+        $_num = $redis->get($__num);
+        $_time = $redis->get($__time);
+    } 
+
+    
+    $redis->set($__num, $_num+1);
+
+    if($_num > 50) {
+        header("Location: https://api.vvhan.com/api/acgimg");
+        die();
+    }
+}
+
+
+
+
 
 if($path){
 
