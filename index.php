@@ -30,7 +30,8 @@ $whiteList = array(
     'shorturl.yimian.xyz',
     'mksec.yimian.xyz',
     'monitor.yimian.xyz',
-    'blog.yimian.xyz'
+    'blog.yimian.xyz',
+    'blank.com'
 );
 
 
@@ -63,6 +64,7 @@ if(!isset($command)) $command = null;
 
 
 $__from = get_from();
+if($__from == '') $__from = 'http://blank.com/';
 $__from = parse_url($__from)['host'];
 
 if(!in_array($__from, $whiteList) && $type == "moe"){
