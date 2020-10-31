@@ -95,6 +95,7 @@ if(!in_array($__from, $whiteList) && $type == "moe"){
 
     if($_num > 50) {
         header("Location: https://api.vvhan.com/api/acgimg");
+        yimian__log("log_api", array("api" => "img", "timestamp" => date('Y-m-d H:i:s', time()), "ip" => ip2long(getIp()), "_from" => get_from(), "content" => 'https://api.vvhan.com/api/acgimg')); 
         die();
     }
 }
