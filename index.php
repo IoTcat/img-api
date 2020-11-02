@@ -67,37 +67,44 @@ $__from = get_from();
 if($__from == '') $__from = 'http://blank.com/';
 $__from = parse_url($__from)['host'];
 
-if(!in_array($__from, $whiteList) && $type == "moe"){
+if($type == "moe"){
     $redis = new redis(); 
     $redis->connect('redis',6379);
 
 
     $__time = 'api/img/_time/'.$__from;
     $__num = 'api/img/_num/'.$__from;
+    $__ip = 'api/img/_ip/'.$__from.'/'.getIp();
 
     if(!$redis->exists($__time) || !$redis->exists($__num)){
         $redis->set($__time, time());
         $redis->set($__num, -200);
+        $redis->set($__ip, 0);
     }
 
     $_time = $redis->get($__time);
     $_num = $redis->get($__num);
+    $_ip = $redis->get($__ip);
 
     if(time() - $_time > 60*60*24){
         $redis->set($__time, time());
         $redis->set($__num, 0);
+        $redis->set($__ip, 0);
         $_num = $redis->get($__num);
+        $_ip = $redis->get($__ip);
         $_time = $redis->get($__time);
     } 
 
     
     $redis->set($__num, $_num+1);
+    $redis->set($__ip, $_ip+1);
 
-    if($_num > 50) {
+    if((!in_array($__from, $whiteList) && $_num > 50) || $_ip > 100) {
         header("Location: https://api.vvhan.com/api/acgimg");
         yimian__log("log_api", array("api" => "img", "timestamp" => date('Y-m-d H:i:s', time()), "ip" => ip2long(getIp()), "_from" => get_from(), "content" => 'https://api.vvhan.com/api/acgimg')); 
         die();
     }
+
 }
 
 
