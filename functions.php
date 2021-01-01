@@ -360,7 +360,7 @@ function getImgsInfo($type, $isFast = false){
 
     preg_match_all('/img_(\S*?)_(\d{2,4})x(\d{2,4})_(\S*?)_(\S*?)_(\S*?).(jpe?g|png|gif|svg)\b/', $str, $arr);
 
-//echo var_dump($str);
+//echo var_dump($arr);
 
     return $arr;
 
