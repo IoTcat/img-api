@@ -99,7 +99,7 @@ if($type == "moe"){
     $redis->set($__num, $_num+1);
     $redis->set($__ip, $_ip+1);
 
-    if((!in_array($__from, $whiteList) && ($_num > 50 || $_ip > 100)) || ($_ip > 1000)) {
+    if((!in_array($__from, $whiteList) && ($_num > 200 || $_ip > 400)) || ($_ip > 1000)) {
         header("Location: https://api.vvhan.com/api/acgimg");
         yimian__log("log_api", array("api" => "img", "timestamp" => date('Y-m-d H:i:s', time()), "ip" => ip2long(getIp()), "_from" => get_from(), "content" => 'https://api.vvhan.com/api/acgimg')); 
         die();
