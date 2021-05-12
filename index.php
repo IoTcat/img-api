@@ -126,17 +126,17 @@ if($path){
 
     if(!$size && !$path){
         $path = $type. '/' .$arr[0][array_rand($arr[0])];
-    }elseif(strpos($size, '-') && !$path){
+    }elseif(!$path){
         $arr_size = explode('x',$size);
+        if($arr_size[0] == '*') $arr_size[0] = '0-9999';
+        if($arr_size[1] == '*') $arr_size[1] = '0-9999';
         if(strpos($arr_size[0], '-')) $arr_size_length = explode('-',$arr_size[0]);
         else $arr_size_length = $arr_size[0];
         if(strpos($arr_size[1], '-')) $arr_size_high = explode('-',$arr_size[1]);
         else $arr_size_high = $arr_size[1];
         $arr_length = getMatchedKeys($arr_size_length, $arr[2]);
         $arr_high = getMatchedKeys($arr_size_high, $arr[3]);
-        if($arr_size[0] == '*') $arr_keys = $arr_high;
-        elseif($arr_size[1] == '*') $arr_keys = $arr_length;
-        else $arr_keys = array_intersect($arr_length, $arr_high);
+        $arr_keys = array_intersect($arr_length, $arr_high);
         if(!count($arr_keys)){
             header('content-type: application/json');
             echo json_encode(array("err"=>"Can not find any images matching Size $size in Type $type!!"));
@@ -146,26 +146,6 @@ if($path){
   	    $index = array_rand($arr_keys);
 	}while($R18 != true && $arr[6][$arr_keys[$index]] != "normal");
         $path = $type. '/' .$arr[0][$arr_keys[$index]];
-        
-    }elseif(!$path){
-        $arr_size = explode('x',$size);
-        $arr_length = getMatchedKeys($arr_size[0], $arr[2]);
-        $arr_high = getMatchedKeys($arr_size[1], $arr[3]);
-        if($arr_size[0] == '*' && $arr_size[1] == '*') $arr_keys = getMatchedKeys(array(0=>0,1=>9999), $arr[2]);
-        elseif($arr_size[0] == '*') $arr_keys = $arr_high;
-        elseif($arr_size[1] == '*') $arr_keys = $arr_length;
-        else $arr_keys = array_intersect($arr_length, $arr_high);
-        if(!count($arr_keys)){
-            header('content-type: application/json');
-            echo json_encode(array("err"=>"Can not find any images matching Size $size in Type $type!!"));
-            die();
-        }
-        do{
-  	    $index = array_rand($arr_keys);
-	}while($R18 != true && $arr[6][$arr_keys[$index]] != "normal");
-        $path = $type. '/' .$arr[0][$arr_keys[$index]];
-        
-        //$path = $type. '/' .$arr[0][$arr_keys[array_rand($arr_keys)]];
 
     }
 
@@ -183,8 +163,9 @@ yimian__log("log_api", array("api" => "img", "timestamp" => date('Y-m-d H:i:s', 
 
 
 function returnImg($path){
-    if($GLOBALS['type'] != 'wallpaper' && $GLOBALS['type'] != 'imgbed' && ((!in_array($GLOBALS['__from'], $GLOBALS['whiteList']) && ($GLOBALS['_num'] > 50 || $GLOBALS['_ip'] > 30)) || ($GLOBALS['_ip'] > 40))) {
-        $url = getImgOneindex($path);
+    if($GLOBALS['type'] != 'wallpaper' && $GLOBALS['type'] != 'imgbed' && ((!in_array($GLOBALS['__from'], $GLOBALS['whiteList']) && ($GLOBALS['_num'] > 400 /* 50 */ || $GLOBALS['_ip'] > 190 /* 30 */)) || ($GLOBALS['_ip'] > 300/*40*/))) {
+        $url = getImgCDN($path);
+        //$url = getImgOneindex($path);
     }else{
         $url = getImg($path);
     }

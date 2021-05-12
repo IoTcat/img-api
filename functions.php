@@ -310,6 +310,10 @@ function getImgOneindex($path){
     return str_replace('yimian-image.obs.cn-east-2.myhuaweicloud.com:443','onedrive.yimian.xyz/img',obsSign($path, $time));
 }
 
+function getImgCDN($path){
+    preg_match_all('/img_(\S*?)_(\d{2,4})x(\d{2,4})_(\S*?)_(\S*?)_(\S*?).(jpe?g|png|gif|svg)\b/', $path, $arr);
+    return str_replace('yimian-image.obs.cn-east-2.myhuaweicloud.com:443/moe','cdn.jsdelivr.net/npm/ushio-api-img-moe@5.0.'.intval($arr[1][0]/10).'',obsSign($path, $time));
+}
 
 
 
