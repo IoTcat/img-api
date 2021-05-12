@@ -79,7 +79,7 @@ if($type == "moe"){
     if(!$redis->exists($__time) || !$redis->exists($__num)){
         $redis->set($__time, time());
         $redis->set($__num, -200);
-        $redis->set($__ip, 0);
+        $redis->set($__ip, -200);
     }
 
     $_time = $redis->get($__time);
@@ -99,11 +99,12 @@ if($type == "moe"){
     $redis->set($__num, $_num+1);
     $redis->set($__ip, $_ip+1);
 
-    if((!in_array($__from, $whiteList) && ($_num > 200 || $_ip > 400)) || ($_ip > 1000)) {
+    if(!$path && ((!in_array($__from, $whiteList) && ($_num > 510 || $_ip > 400)) || ($_ip > 400))) {
         header("Location: https://api.vvhan.com/api/acgimg");
         yimian__log("log_api", array("api" => "img", "timestamp" => date('Y-m-d H:i:s', time()), "ip" => ip2long(getIp()), "_from" => get_from(), "content" => 'https://api.vvhan.com/api/acgimg')); 
         die();
     }
+
 
 }
 
@@ -182,9 +183,14 @@ yimian__log("log_api", array("api" => "img", "timestamp" => date('Y-m-d H:i:s', 
 
 
 function returnImg($path){
-    $url = getImg($path);
+    if($GLOBALS['type'] != 'wallpaper' && $GLOBALS['type'] != 'imgbed' && ((!in_array($GLOBALS['__from'], $GLOBALS['whiteList']) && ($GLOBALS['_num'] > 50 || $GLOBALS['_ip'] > 30)) || ($GLOBALS['_ip'] > 40))) {
+        $url = getImgOneindex($path);
+    }else{
+        $url = getImg($path);
+    }
     if($GLOBALS['display']) echo file_get_contents($url); else header("Location: $url");
 }
+
 
 function getMatchedKeys($str, $arr){
     if(!is_array($str)){

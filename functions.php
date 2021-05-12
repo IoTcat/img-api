@@ -306,6 +306,11 @@ function getImg($path, $time = 300){
 }
 
 
+function getImgOneindex($path){
+    return str_replace('yimian-image.obs.cn-east-2.myhuaweicloud.com:443','onedrive.yimian.xyz/img',obsSign($path, $time));
+}
+
+
 
 
 function obsSign($path, $expires = 300){ 
