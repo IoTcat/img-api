@@ -31,7 +31,8 @@ $whiteList = array(
     'mksec.yimian.xyz',
     'monitor.yimian.xyz',
     'blog.yimian.xyz',
-    'blank.com'
+    'blank.com',
+    'www.cnblogs.com'
 );
 
 
@@ -53,7 +54,7 @@ $command = $_REQUEST['command'];
 if(!isset($type) || !($type == "moe" || $type == "koino" || $type == "head" || $type == "wallpaper" || $type == "blog" || $type == "imgbed" || $type == "easyver")) $type = "moe";
 if(!isset($id)) $id = null;
 if(!isset($size)) $size = null;
-if(!isset($path)) $path = null;
+if(!isset($path)) $path = null; else $type = 'path';
 if($display != "true") $display = false; else $display = true;
 if($R18 != "true") $R18 = false; else $R18 = true;
 if(isset($range) && $range > 0) $range = $range; else $range = 0;
@@ -78,8 +79,8 @@ if($type == "moe"){
 
     if(!$redis->exists($__time) || !$redis->exists($__num)){
         $redis->set($__time, time());
-        $redis->set($__num, -200);
-        $redis->set($__ip, -200);
+        $redis->set($__num, -10);
+        $redis->set($__ip, -1);
     }
 
     $_time = $redis->get($__time);
@@ -99,7 +100,7 @@ if($type == "moe"){
     $redis->set($__num, $_num+1);
     $redis->set($__ip, $_ip+1);
 
-    if(!$path && ((!in_array($__from, $whiteList) && ($_num > 510 || $_ip > 400)) || ($_ip > 400))) {
+    if(!$path && ((!in_array($__from, $whiteList) && ($_num > 10000 || $_ip > 1000)) || ($_ip > 3000))) {
         header("Location: https://api.vvhan.com/api/acgimg");
         yimian__log("log_api", array("api" => "img", "timestamp" => date('Y-m-d H:i:s', time()), "ip" => ip2long(getIp()), "_from" => get_from(), "content" => 'https://api.vvhan.com/api/acgimg')); 
         die();
@@ -163,7 +164,7 @@ yimian__log("log_api", array("api" => "img", "timestamp" => date('Y-m-d H:i:s', 
 
 
 function returnImg($path){
-    if($GLOBALS['type'] != 'wallpaper' && $GLOBALS['type'] != 'imgbed' && ((!in_array($GLOBALS['__from'], $GLOBALS['whiteList']) && ($GLOBALS['_num'] > 400 /* 50 */ || $GLOBALS['_ip'] > 190 /* 30 */)) || ($GLOBALS['_ip'] > 300/*40*/))) {
+    if($GLOBALS['type'] != 'wallpaper' && $GLOBALS['type'] != 'imgbed' && $GLOBALS['type'] != 'path' && ((!in_array($GLOBALS['__from'], $GLOBALS['whiteList']) && ($GLOBALS['_num'] > /*2*/0 || $GLOBALS['_ip'] > /*1*/0)) || ($GLOBALS['_ip'] > /*3*/0))) {
         $url = getImgCDN($path);
         //$url = getImgOneindex($path);
     }else{
