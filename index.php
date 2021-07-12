@@ -168,7 +168,11 @@ function returnImg($path){
         $url = getImgCDN($path);
         //$url = getImgOneindex($path);
     }else{
-        $url = getImg($path);
+        if($GLOBALS['type'] == 'wallpaper') {
+            $url = getImgCDNwallpaper($path);
+        }else{
+            $url = getImg($path);
+        }
     }
     if($GLOBALS['display']) echo file_get_contents($url); else header("Location: $url");
 }
