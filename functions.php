@@ -352,30 +352,42 @@ function obsSign($path, $expires = 300){
 
 
 function getImgsInfo($type, $isFast = false){ 
+
     
-    $obsClient = new ObsClient([
-            'key' => $GLOBALS['huawei_AK'],
-            'secret' => $GLOBALS['huawei_SK'],
-            'endpoint' => "https://obs.cn-east-2.myhuaweicloud.com",
-    ]);
+    $redis = new redis(); 
+    $redis->connect('redis',6379);
 
-    $resp = $obsClient -> listObjects([
-        'Bucket' => 'yimian-image',
-        'MaxKeys' => 10000,
-        'Prefix' => $type.'/',
-        'Marker' => $type.'/img'
-    ]);
+    $pifix = '__imgInfoCache/'.$type;
+
+    if($redis->exists($pifix) && strlen($redis->get($pifix)) > 10){
+       $str = $redis->get($pifix); 
+    }else{
+
+        $obsClient = new ObsClient([
+                'key' => $GLOBALS['huawei_AK'],
+                'secret' => $GLOBALS['huawei_SK'],
+                'endpoint' => "https://obs.cn-east-2.myhuaweicloud.com",
+        ]);
+
+        $resp = $obsClient -> listObjects([
+            'Bucket' => 'yimian-image',
+            'MaxKeys' => 10000,
+            'Prefix' => $type.'/',
+            'Marker' => $type.'/img'
+        ]);
 
 
-    //ini_set("pcre.backtrack_limit" , -1); ini_set("pcre.recursion_limit" , -1); ini_set("memory_limit" , "1024M");
+        //ini_set("pcre.backtrack_limit" , -1); ini_set("pcre.recursion_limit" , -1); ini_set("memory_limit" , "1024M");
 
-    foreach($resp['Contents'] as $index => $val){
-        $str .= $val['Key'].'  ';
-    };
+        foreach($resp['Contents'] as $index => $val){
+            $str .= $val['Key'].'  ';
+        };
 
-    $obsClient -> close();
+        $obsClient -> close();
 
 
+        $redis->setEx($pifix, 3600, $str);
+    }
     preg_match_all('/img_(\S*?)_(\d{2,4})x(\d{2,4})_(\S*?)_(\S*?)_(\S*?).(jpe?g|png|gif|svg)\b/', $str, $arr);
 
 //echo var_dump($arr);
