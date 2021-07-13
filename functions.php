@@ -310,8 +310,11 @@ function getImgOneindex($path){
 }
 
 function getImgCDN($path){
-    preg_match_all('/img_(\S*?)_(\d{2,4})x(\d{2,4})_(\S*?)_(\S*?)_(\S*?).(jpe?g|png|gif|svg)\b/', $path, $arr);
-    return str_replace('moe','https://cdn.jsdelivr.net/npm/ushio-api-img-moe@5.0.'.intval($arr[1][0]/10).'',$path);
+    if(stripos($path, 'moe') !== false){
+        preg_match_all('/img_(\S*?)_(\d{2,4})x(\d{2,4})_(\S*?)_(\S*?)_(\S*?).(jpe?g|png|gif|svg)\b/', $path, $arr);
+        return str_replace('moe','https://cdn.jsdelivr.net/npm/ushio-api-img-moe@5.0.'.intval($arr[1][0]/10).'',$path);
+    }
+    return getImg($path);
 }
 
 function getImgCDNwallpaper($path){
