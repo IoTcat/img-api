@@ -13,7 +13,7 @@ $whiteList = array(
     'www.eee.dog',
     'api.yimian.xyz',
     'home.yimian.xyz',
-    'img.yimian.xyz',
+//    'img.yimian.xyz',
     'acg.watch',
     'iotcat.me',
     'ushio.cool',
@@ -31,8 +31,7 @@ $whiteList = array(
     'mksec.yimian.xyz',
     'monitor.yimian.xyz',
     'blog.yimian.xyz',
-    'blank.com',
-    'www.cnblogs.com'
+    'blank.com'
 );
 
 
@@ -115,6 +114,12 @@ if($type == "moe"){
 
 if($path){
 
+    if(strpos($path, 'moe') !== false){
+        $type = 'moe';
+    }elseif(strpos($path, 'wallpaper') !== false){
+        $type = 'wallpaper';
+    }
+
     returnImg($path);
 }elseif($type){
 
@@ -164,7 +169,7 @@ yimian__log("log_api", array("api" => "img", "timestamp" => date('Y-m-d H:i:s', 
 
 
 function returnImg($path){
-    if($GLOBALS['type'] != 'wallpaper' && $GLOBALS['type'] != 'imgbed' && $GLOBALS['type'] != 'path' && ((!in_array($GLOBALS['__from'], $GLOBALS['whiteList']) && ($GLOBALS['_num'] > /*2*/0 || $GLOBALS['_ip'] > /*1*/0)) || ($GLOBALS['_ip'] > /*3*/0))) {
+    if($GLOBALS['type'] != 'wallpaper' && $GLOBALS['type'] != 'imgbed' && $GLOBALS['type'] != 'path' /*&& ((!in_array($GLOBALS['__from'], $GLOBALS['whiteList']) && ($GLOBALS['_num'] > 0 || $GLOBALS['_ip'] > 0)) || ($GLOBALS['_ip'] > 0))*/) {
         $url = getImgCDN($path);
         //$url = getImgOneindex($path);
     }else{

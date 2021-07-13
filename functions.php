@@ -293,14 +293,13 @@ use Obs\ObsClient;
 
 /* obs get video */
 function getVideo($path, $time = 120*60){
-
+    
     return obsSign($path, $time);
 }
 
 
 /* obs get img */
 function getImg($path, $time = 300){
-
     //return str_replace('yimian-image.obs.cn-east-2.myhuaweicloud.com:443','image.yimian.xyz',obsSign($path, $time));
     return obsSign($path, $time);
 }
