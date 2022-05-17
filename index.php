@@ -170,10 +170,12 @@ yimian__log("log_api", array("api" => "img", "timestamp" => date('Y-m-d H:i:s', 
 
 function returnImg($path){
     if($GLOBALS['type'] != 'wallpaper' && $GLOBALS['type'] != 'imgbed' && $GLOBALS['type'] != 'path' /*&& ((!in_array($GLOBALS['__from'], $GLOBALS['whiteList']) && ($GLOBALS['_num'] > 0 || $GLOBALS['_ip'] > 0)) || ($GLOBALS['_ip'] > 0))*/) {
-        $url = getImgCDN($path);
+       $url = getImgCDN($path);
         //$url = getImgOneindex($path);
+      //  $url = getImg($path);
     }else{
         if($GLOBALS['type'] == 'wallpaper') {
+            //$url = getImg($path);
             $url = getImgCDNwallpaper($path);
         }else{
             $url = getImg($path);

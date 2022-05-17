@@ -312,7 +312,7 @@ function getImgOneindex($path){
 function getImgCDN($path){
     if(stripos($path, 'moe') !== false){
         preg_match_all('/img_(\S*?)_(\d{2,4})x(\d{2,4})_(\S*?)_(\S*?)_(\S*?).(jpe?g|png|gif|svg)\b/', $path, $arr);
-        return str_replace('moe','https://cdn.jsdelivr.net/npm/ushio-api-img-moe@5.0.'.intval($arr[1][0]/10).'',$path);
+        return 'https://proxy.yimian.xyz/get/?url='.base64_encode(str_replace('moe','https://cdn.jsdelivr.net/npm/ushio-api-img-moe@5.0.'.intval($arr[1][0]/10).'',$path));
     }
     return getImg($path);
 }
@@ -322,7 +322,7 @@ function getImgCDNwallpaper($path){
     $date = strtotime($arr[1][0].' 00:00:00');
     $dateline = strtotime('2021-07-11 00:00:00');
     if($date < $dateline)
-        return str_replace('wallpaper','https://cdn.jsdelivr.net/npm/ushio-api-img-wallpaper@1.1'.date('y.nw', $date).'',$path);
+        return 'https://proxy.yimian.xyz/get/?url='.base64_encode(str_replace('wallpaper','https://cdn.jsdelivr.net/npm/ushio-api-img-wallpaper@1.1'.date('y.nw', $date).'',$path));
     else
         return getImg($path);
 }
