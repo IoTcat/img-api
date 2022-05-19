@@ -206,6 +206,7 @@ function get_from(){
 
 	if($_SERVER['HTTP_REFERER']) return $_SERVER['HTTP_REFERER'];
 	elseif($_REQUEST['from']) return $_REQUEST['from'];
+    return '';
 }
 
 function get_from_domain(){
@@ -309,10 +310,18 @@ function getImgOneindex($path){
     return str_replace('yimian-image.obs.cn-east-2.myhuaweicloud.com:443','onedrive.yimian.xyz/img',obsSign($path, $time));
 }
 
-function getImgCDN($path){
+function getImgCDNProxy($path){
     if(stripos($path, 'moe') !== false){
         preg_match_all('/img_(\S*?)_(\d{2,4})x(\d{2,4})_(\S*?)_(\S*?)_(\S*?).(jpe?g|png|gif|svg)\b/', $path, $arr);
         return 'https://proxy.yimian.xyz/get/?url='.base64_encode(str_replace('moe','https://cdn.jsdelivr.net/npm/ushio-api-img-moe@5.0.'.intval($arr[1][0]/10).'',$path));
+    }
+    return getImg($path);
+}
+
+function getImgCDN($path){
+    if(stripos($path, 'moe') !== false){
+        preg_match_all('/img_(\S*?)_(\d{2,4})x(\d{2,4})_(\S*?)_(\S*?)_(\S*?).(jpe?g|png|gif|svg)\b/', $path, $arr);
+        return str_replace('moe','https://cdn.jsdelivr.net/npm/ushio-api-img-moe@5.0.'.intval($arr[1][0]/10).'',$path);
     }
     return getImg($path);
 }
