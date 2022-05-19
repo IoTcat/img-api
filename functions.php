@@ -321,7 +321,9 @@ function getImgCDNProxy($path){
 function getImgCDN($path){
     if(stripos($path, 'moe') !== false){
         preg_match_all('/img_(\S*?)_(\d{2,4})x(\d{2,4})_(\S*?)_(\S*?)_(\S*?).(jpe?g|png|gif|svg)\b/', $path, $arr);
-        return str_replace('moe','https://cdn.jsdelivr.net/npm/ushio-api-img-moe@5.0.'.intval($arr[1][0]/10).'',$path);
+        return str_replace('moe','https://fastly.jsdelivr.net/npm/ushio-api-img-moe@5.0.'.intval($arr[1][0]/10).'',$path);
+        //https://testingcf.jsdelivr.net/
+        //https://gcore.jsdelivr.net/
     }
     return getImg($path);
 }
