@@ -336,8 +336,15 @@ function getImgCDNwallpaper($path){
     preg_match_all('/img_(\S*?)_(\d{2,4})x(\d{2,4})_(\S*?)_(\S*?)_(\S*?).(jpe?g|png|gif|svg)\b/', $path, $arr);
     $date = strtotime($arr[1][0].' 00:00:00');
     $dateline = strtotime('2021-07-11 00:00:00');
+        //$d = 'https://testingcf.jsdelivr.net/';
+        $d = 'https://gcore.jsdelivr.net/';
+       // $d = 'https://fastly.jsdelivr.net/';
+       // $d = 'https://cdn.jsdelivr.net/';
+       // $d = 'https://originfastly.jsdelivr.net/';
+       // $d = 'https://quantil.jsdelivr.net/';
     if($date < $dateline)
-        return 'https://proxy.yimian.xyz/get/?url='.base64_encode(str_replace('wallpaper','https://cdn.jsdelivr.net/npm/ushio-api-img-wallpaper@1.1'.date('y.nw', $date).'',$path));
+        //return 'https://proxy.yimian.xyz/get/?url='.base64_encode(str_replace('wallpaper','https://cdn.jsdelivr.net/npm/ushio-api-img-wallpaper@1.1'.date('y.nw', $date).'',$path));
+        return str_replace('wallpaper',$d.'npm/ushio-api-img-wallpaper@1.1'.date('y.nw', $date).'',$path);
     else
         return getImg($path);
 }
