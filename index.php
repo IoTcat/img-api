@@ -16,7 +16,7 @@ $whiteList = array(
 //    'img.yimian.xyz',
     'acg.watch',
     'iotcat.me',
-    'ushio.cool',
+    'ushio.yimian.xyz',
     'yimian.xyz',
     'guide.yimian.xyz',
     'cp-acc.yimian.xyz',
