@@ -34,6 +34,9 @@ $whiteList = array(
     'blank.com'
 );
 
+$costyPaths = array(
+    'moe/img_862_1920x1080_96_null_normal.jpg'
+);
 
 
 header('content-type: image/png');
@@ -170,7 +173,11 @@ yimian__log("log_api", array("api" => "img", "timestamp" => date('Y-m-d H:i:s', 
 
 function returnImg($path){
     if($GLOBALS['type'] != 'wallpaper' && $GLOBALS['type'] != 'imgbed' && $GLOBALS['type'] != 'path' /*&& ((!in_array($GLOBALS['__from'], $GLOBALS['whiteList']) && ($GLOBALS['_num'] > 0 || $GLOBALS['_ip'] > 0)) || ($GLOBALS['_ip'] > 0))*/) {
-        $url = getImgCDN($path);
+	if(in_array($path, $GLOBALS['costyPaths'])){
+		$url = getImgCDNFree($path);
+	}else{
+        	$url = getImgCDN($path);
+	}
         //if(get_from()=='')$url = getImgCDN($path);
         //else $url = getImgCDNProxy($path);
         //$url = getImgOneindex($path);

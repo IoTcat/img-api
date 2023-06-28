@@ -318,6 +318,23 @@ function getImgCDNProxy($path){
     return getImg($path);
 }
 
+
+function getImgCDNFree($path){
+    if(stripos($path, 'moe') !== false){
+        preg_match_all('/img_(\S*?)_(\d{2,4})x(\d{2,4})_(\S*?)_(\S*?)_(\S*?).(jpe?g|png|gif|svg)\b/', $path, $arr);
+        //$d = 'https://testingcf.jsdelivr.net/';
+        //$d = 'https://gcore.jsdelivr.net/';
+        $d = 'https://fastly.jsdelivr.net/';
+       // $d = 'https://cdn.jsdelivr.net/';
+       // $d = 'https://originfastly.jsdelivr.net/';
+       // $d = 'https://quantil.jsdelivr.net/';
+        return str_replace('moe',$d.'npm/ushio-api-img-moe@5.0.'.intval($arr[1][0]/10).'',$path);
+    }
+    return getImg($path);
+}
+
+
+
 function getImgCDN($path){
     if(stripos($path, 'moe') !== false){
         preg_match_all('/img_(\S*?)_(\d{2,4})x(\d{2,4})_(\S*?)_(\S*?)_(\S*?).(jpe?g|png|gif|svg)\b/', $path, $arr);
